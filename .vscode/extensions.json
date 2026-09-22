@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "prisma.prisma",
+    "ms-python.python",
+    "ms-python.pylance",
+    "bradlc.vscode-tailwindcss",
+    "ms-azuretools.vscode-docker",
+    "GitHub.copilot"
+  ]
+}

@@ -1,0 +1,23 @@
+fastapi
+uvicorn[standard]
+python-dotenv
+openai
+pydantic
+ollama
+yfinance>=0.2.0
+
+# Agentic AI & LLM Tools
+langchain
+langgraph
+litellm
+langchain-openai
+langchain-ollama
+
+# Data Science & ML Tools
+pandas
+numpy
+scikit-learn
+xgboost
+shap
+pypdf
+

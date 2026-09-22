@@ -1,0 +1,16 @@
+{
+  "name": "@ai-finance/database",
+  "version": "1.0.0",
+  "description": "Prisma schema and database client",
+  "main": "index.ts",
+  "scripts": {
+    "generate": "prisma generate",
+    "push": "prisma db push"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.0.0"
+  },
+  "devDependencies": {
+    "prisma": "^5.0.0"
+  }
+}

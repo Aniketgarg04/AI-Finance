@@ -1,0 +1,69 @@
+# ============================================================
+#   ROOT .gitignore — AI Finance Copilot Monorepo
+# ============================================================
+
+# ----- Node / npm -----
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnp
+.pnp.js
+
+# ----- Builds & dist -----
+dist/
+build/
+.next/
+out/
+
+# ----- Environment files  (NEVER commit these) -----
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+*.env
+
+# ----- Prisma -----
+# Keep schema, ignore generated client
+packages/database/node_modules/
+apps/api/node_modules/
+
+# ----- Next.js -----
+apps/web/.next/
+apps/web/out/
+apps/web/node_modules/
+
+# ----- NestJS / TypeScript -----
+apps/api/dist/
+apps/api/node_modules/
+
+# ----- Python / ML Service -----
+apps/ml-service/__pycache__/
+apps/ml-service/*.pyc
+apps/ml-service/*.pyo
+apps/ml-service/.venv/
+apps/ml-service/venv/
+apps/ml-service/.env
+
+# ----- OS & editors -----
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.recommended.json
+*.swp
+*.swo
+
+# ----- Logs -----
+logs/
+*.log
+
+# ----- Coverage -----
+coverage/
+.nyc_output/
+
+# ----- Misc -----
+*.tsbuildinfo
+.turbo/

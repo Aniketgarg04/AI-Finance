@@ -1,0 +1,191 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String       @id @default(cuid())
+  email          String       @unique
+  password       String?
+  googleId       String?      @unique
+  name           String?
+  phone          String?
+  address        String?
+  dob            DateTime?
+  pan            String?
+  employmentType String       @default("SALARIED")
+  annualIncome   Float        @default(0)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  transactions Transaction[]
+  budgets      Budget[]
+  goals        Goal[]
+  portfolios   Portfolio[]
+  taxRecords   TaxRecord[]
+  fraudAlerts  FraudAlert[]
+  aiChats      AIChat[]
+  bankAccounts BankAccount[]
+  bills        Bill[]
+  notifications Notification[]
+}
+
+model BankAccount {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  accountName String
+  bankName    String
+  balance     Float
+  accountType String   @default("SAVINGS") // SAVINGS, CURRENT, SALARY
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  transactions Transaction[]
+}
+
+model Bill {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  name      String
+  amount    Float
+  dueDate   DateTime
+  isPaid    Boolean  @default(false)
+  category  String   // Electricity, Credit Card, Rent, etc.
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Transaction {
+  id            String       @id @default(cuid())
+  userId        String
+  user          User         @relation(fields: [userId], references: [id])
+  bankAccountId String?
+  bankAccount   BankAccount? @relation(fields: [bankAccountId], references: [id])
+  amount        Float
+  type          String       // "INCOME" or "EXPENSE"
+  category      String       // Food, Rent, Salary, etc.
+  description   String?
+  date          DateTime     @default(now())
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+model Budget {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  category    String
+  limit       Float
+  month       Int
+  year        Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Goal {
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id])
+  name          String
+  targetAmount  Float
+  currentAmount Float     @default(0)
+  deadline      DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Portfolio {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+  assetType    String   @default("STOCK") // STOCK, MF, FD, GOLD, CRYPTO, REAL_ESTATE
+  assetSymbol  String?  // AAPL, BTC, etc.
+  assetName    String
+  quantity     Float    @default(1)
+  buyPrice     Float
+  currentPrice Float?
+  buyDate      DateTime @default(now())
+  
+  // Specific asset fields (nullable)
+  maturityDate DateTime? // For FD
+  interestRate Float?    // For FD
+  nav          Float?    // For MF
+  sipAmount    Float?    // For MF
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model TaxRecord {
+  id                  String   @id @default(cuid())
+  userId              String
+  user                User     @relation(fields: [userId], references: [id])
+  year                Int
+  
+  // Income Sources
+  grossSalary         Float    @default(0)
+  hra                 Float    @default(0)
+  specialAllowance    Float    @default(0)
+  bonus               Float    @default(0)
+  otherIncome         Float    @default(0)
+  housePropertyIncome Float    @default(0)
+  capitalGains        Float    @default(0)
+  businessIncome      Float    @default(0)
+  
+  // Deductions
+  investments80C      Float    @default(0)
+  investments80D      Float    @default(0)
+  investments80E      Float    @default(0)
+  standardDeduction   Float    @default(0)
+  professionalTax     Float    @default(0)
+  
+  // Tax Paid
+  tdsPaid             Float    @default(0)
+
+  // Calculated Results
+  taxableIncomeOld    Float    @default(0)
+  taxableIncomeNew    Float    @default(0)
+  taxOldRegime        Float    @default(0)
+  taxNewRegime        Float    @default(0)
+  
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+model FraudAlert {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  transactionId String?
+  reason        String
+  resolved      Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model AIChat {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  prompt    String
+  response  String
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  type      String   // FRAUD_ALERT, BUDGET_WARNING, GOAL_PROGRESS, BILL_REMINDER, AI_INSIGHT, SYSTEM
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
